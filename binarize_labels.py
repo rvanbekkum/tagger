@@ -1,5 +1,6 @@
 from sklearn.preprocessing import MultiLabelBinarizer
 import csv
+import numpy as np
 import re
 
 IMAGE_DATA = 'image_data.tsv'
@@ -20,4 +21,8 @@ def filter_tags(tags):
 
 
 y = tsv_to_list(IMAGE_DATA)
-MultiLabelBinarizer().fit_transform(y)
+y_binary = MultiLabelBinarizer().fit_transform(y)
+
+print(np.shape(y_binary))
+
+np.save('y', y_binary)
