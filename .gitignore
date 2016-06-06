@@ -1,0 +1,8 @@
+### Vagrant ###
+.vagrant/
+
+### PyCharm ###
+.idea/
+
+## Virtualenv ###
+.venv/
