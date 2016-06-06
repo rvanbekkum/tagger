@@ -3,6 +3,3 @@
 
 ### PyCharm ###
 .idea/
-
-## Virtualenv ###
-.venv/
