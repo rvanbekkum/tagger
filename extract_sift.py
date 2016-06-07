@@ -16,7 +16,7 @@ def get_sift(img, show=1, maxfeatures=500, xgrid=1, ygrid=1):
     fs = sift_det_grid.detect(img2)
 
     (keypoints, descriptors) = sift_desc.compute(img2, fs)
-    
+
     if show == 1:
         img_wSIFT = img.copy()
         d_blue = cv2.cv.RGB(25, 15, 100)
@@ -24,7 +24,7 @@ def get_sift(img, show=1, maxfeatures=500, xgrid=1, ygrid=1):
         for f in fs:
             cv2.circle(img_wSIFT, (int(f.pt[0]), int(f.pt[1])), int(f.size/2), l_blue, 2, cv2.CV_AA)
             cv2.circle(img_wSIFT, (int(f.pt[0]), int(f.pt[1])), int(f.size/2), d_blue, 1, cv2.CV_AA)
-            ori = math.radians(f.angle) 
+            ori = math.radians(f.angle)
             tx = math.cos(ori) * 0 - math.sin(ori) * (f.size/2)
             ty = math.sin(ori) * 0 + math.cos(ori) * (f.size/2)
             tx += f.pt[0]
@@ -79,7 +79,7 @@ def file_to_sift(filename):
             kp_response = kp_desc[3]
             kp_angle = int(kp_desc[4])
             kp_octave = int(kp_desc[5])
-            
+
             ktmp = cv2.KeyPoint(x=x, y=y, _size=kp_size, _angle=kp_angle, _response=kp_response, _octave=kp_octave)
             kp.append(ktmp)
 
@@ -123,4 +123,4 @@ def file_to_sift(filename, dir, image_hash):
 
     return kp, np.array(desc)
 
-extract_sift('dog.jpg')  # Replace filename here to test the script with some image
+# extract_sift('dog.jpg')  # Replace filename here to test the script with some image
