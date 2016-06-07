@@ -121,6 +121,6 @@ def file_to_sift(filename, dir, image_hash):
 
                 desc.append(dtmp)
 
-    return kp, np.array(desc, dtype=np.float32)
+    return kp, np.array(desc)
 
 extract_sift('dog.jpg')  # Replace filename here to test the script with some image
