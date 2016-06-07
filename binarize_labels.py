@@ -16,17 +16,22 @@ def tsv_to_list(csvinput):
             image_hash = row[2]
             tags = row[10].split(',')
             tags_filtered = filter_tags(tags)
-            image_hashes.append(image_hash)
-            labels.append(tags_filtered)
+            if tags_filtered:
+                image_hashes.append(image_hash)
+                labels.append(tags_filtered)
     return image_hashes, labels
 
 def filter_tags(tags):
-    regex = '(\%[A-Z0-9]{2})+'
-    return [tag for tag in tags if not(re.search(regex, tag))]
+    regex = r'(\%[A-Z0-9]{2})+'
+    return [tag for tag in tags if re.sub(regex, '', tag)]
+    # return [tag for tag in tags if not(re.search(regex, tag)) and tag]
 
 if __name__ == '__main__':
     image_hashes, y_labels = tsv_to_list(IMAGE_DATA)
-    y_binary = MultiLabelBinarizer().fit_transform(y_labels)
+    print(len(image_hashes))
+    mlb = MultiLabelBinarizer()
+    y_binary = mlb.fit_transform(y_labels)
+    np.save('labels', mlb.classes_)
 
     y_labeled = zip(image_hashes, y_binary)
 

@@ -8,15 +8,13 @@ from sklearn.cluster import KMeans
 def get_feature_vector(kmeans, desc):
     labels = kmeans.predict(desc)
     num_centers = len(kmeans.cluster_centers_)
-    feature_vector, _ = np.histogram(labels, bins=range(num_centers + 1), density=True)
+    feature_vector, _ = np.histogram(labels, bins=range(num_centers + 1))
     return feature_vector
-
 
 def feature_vector_to_file(directory, image_hash, feature_vector):
     if not os.path.exists(directory):
         os.makedirs(directory)
     np.save(directory + '/' + image_hash, feature_vector)
-
 
 def get_sift_descriptors(image_hash, sift_features_dir):
     for filename in os.listdir(sift_features_dir):
@@ -24,12 +22,11 @@ def get_sift_descriptors(image_hash, sift_features_dir):
         if file_extension == '.sift' and image_hash.startswith(name):
             return file_to_sift(filename, sift_features_dir, image_hash)
 
-
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
     parser.add_argument('-m', help='metadata of the training set', required=False, default='image_data.tsv')
     parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='features/sift')
-    parser.add_argument('-n', help='extract only for first <number> files', required=False, default=0)
+    parser.add_argument('-n', help='extract only for first <number> files', required=False, default=10)
     parser.add_argument('-o', help='output directory of feature vectors', required=False, default='features/feature_vectors')
     return parser.parse_args()
 
@@ -68,6 +65,7 @@ if __name__ == '__main__':
             if number_processed > number_of_images:
                 break
             image_hash = image_line.split()[2]
+            print(image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, args.f)
             if desc.shape[0] != 0:
                 feature_vector = get_feature_vector(kmeans, desc)
