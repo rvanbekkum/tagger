@@ -11,10 +11,12 @@ def get_feature_vector(kmeans, desc):
     feature_vector, _ = np.histogram(labels, bins=range(num_centers + 1), density=True)
     return feature_vector
 
+
 def feature_vector_to_file(directory, image_hash, feature_vector):
     if not os.path.exists(directory):
         os.makedirs(directory)
     np.save(directory + '/' + image_hash, feature_vector)
+
 
 def get_sift_descriptors(image_hash, sift_features_dir):
     for filename in os.listdir(sift_features_dir):
@@ -29,8 +31,7 @@ def parse_arguments():
     parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='features/sift')
     parser.add_argument('-n', help='extract only for first <number> files', required=False, default=0)
     parser.add_argument('-o', help='output directory of feature vectors', required=False, default='features/feature_vectors')
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_arguments()
