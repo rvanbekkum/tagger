@@ -4,7 +4,8 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.provider "virtualbox" do |v|
-    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     v.customize ["modifyvm", :id, "--memory", 4096]
     v.customize ["modifyvm", :id, "--cpus", 2]
   end

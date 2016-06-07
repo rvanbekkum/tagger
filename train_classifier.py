@@ -20,8 +20,11 @@ if __name__ == '__main__':
     for filename in os.listdir(args.f):
         feature_vector = np.load(args.f + '/' + filename)
         label_vector = np.load(args.l + '/' + filename)
-        X.append(feature_vector)
-        y.append(label_vector)
+        X.append(feature_vector.tolist())
+        y.append(label_vector.tolist())
+    X = np.matrix(X)
+    y = np.matrix(y)
     print "# Training SVM"
-    #clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
-    #clf.predict(np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy'))
+    clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
+    print np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy').shape
+    print clf.predict(np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy')).shape
