@@ -3,11 +3,15 @@
 echo 'LC_ALL="en_US.UTF-8"' | sudo tee -a /etc/environment
 
 sudo apt-get update
-sudo apt-get install -y build-essential python3-dev python3-setuptools \
-                        python3-numpy python3-scipy python3-pip libatlas-dev \
-                        libatlas3gf-base python3-matplotlib
+sudo apt-get install -y libgtk2.0-0
 
-sudo update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3
-sudo update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3
+cd /home/vagrant
+wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b
 
-sudo pip3 install scikit-learn
+echo 'PATH=/home/vagrant/miniconda3/bin:$PATH' | tee -a /home/vagrant/.bashrc
+
+source /home/vagrant/.bashrc
+
+./miniconda3/bin/conda install numpy scipy scikit-learn matplotlib
+./miniconda3/bin/conda install -c menpo opencv3=3.1.0
