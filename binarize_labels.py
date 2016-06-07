@@ -4,25 +4,36 @@ import numpy as np
 import re
 
 IMAGE_DATA = 'image_data.tsv'
+OUTPUT = 'features/labels/'
+NUM_OF_IMAGES = 100
 
 def tsv_to_list(csvinput):
+    image_hashes = []
     labels = []
     with open(csvinput) as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         for row in reader:
+            image_hash = row[2]
             tags = row[10].split(',')
             tags_filtered = filter_tags(tags)
+            image_hashes.append(image_hash)
             labels.append(tags_filtered)
-    return labels
+    return image_hashes, labels
 
 def filter_tags(tags):
     regex = '(\%[A-Z0-9]{2})+'
     return [tag for tag in tags if not(re.search(regex, tag))]
 
+if __name__ == '__main__':
+    image_hashes, y_labels = tsv_to_list(IMAGE_DATA)
+    y_binary = MultiLabelBinarizer().fit_transform(y_labels)
 
-y = tsv_to_list(IMAGE_DATA)
-y_binary = MultiLabelBinarizer().fit_transform(y)
+    y_labeled = zip(image_hashes, y_binary)
 
-print(np.shape(y_binary))
-
-np.save('y', y_binary)
+    i = 0
+    for (hash, y_vector) in y_labeled:
+        if i >= NUM_OF_IMAGES:
+            break
+        np.save(OUTPUT + hash, y_vector)
+        print(hash, y_vector)
+        i = i + 1
