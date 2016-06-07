@@ -3,6 +3,8 @@ import argparse
 import os
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import LinearSVC
+from sklearn.preprocessing import MultiLabelBinarizer
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
@@ -18,13 +20,27 @@ if __name__ == '__main__':
     y = []
     print "# Loading feature vectors and labels"
     for filename in os.listdir(args.f):
-        feature_vector = np.load(args.f + '/' + filename)
-        label_vector = np.load(args.l + '/' + filename)
-        X.append(feature_vector.tolist())
-        y.append(label_vector.tolist())
+        if os.path.isfile(args.l + '/' + filename):
+            feature_vector = np.load(args.f + '/' + filename)
+            label_vector = np.load(args.l + '/' + filename)
+            X.append(feature_vector.tolist())
+            y.append(label_vector.tolist())
     X = np.matrix(X)
     y = np.matrix(y)
+    #
     print "# Training SVM"
     clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
-    # print np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy').shape
-    print clf.predict(np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy')).shape
+
+    vector = np.load('features/feature_vectors/0004bb7bbb2676da9b22642423e90.npy')
+    vector = np.matrix(vector)
+    prediction = clf.predict(vector)
+    print(prediction)
+    labels = np.load('labels.npy')
+    indexes = [i for i, x in enumerate(prediction[0]) if x == 1]
+    for i in indexes:
+        print(labels[i])
+
+    y_vector = np.load('features/labels/0004bb7bbb2676da9b22642423e90.npy')
+    indexes = [i for i, x in enumerate(y_vector) if x == 1]
+    for i in indexes:
+        print(labels[i])

@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 def get_feature_vector(kmeans, desc):
     labels = kmeans.predict(desc)
     num_centers = len(kmeans.cluster_centers_)
-    feature_vector, _ = np.histogram(labels, bins=range(num_centers + 1), density=True)
+    feature_vector, _ = np.histogram(labels, bins=range(num_centers + 1))
     return feature_vector
 
 
@@ -29,7 +29,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
     parser.add_argument('-m', help='metadata of the training set', required=False, default='image_data.tsv')
     parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='features/sift')
-    parser.add_argument('-n', help='extract only for first <number> files', required=False, default=0)
+    parser.add_argument('-n', help='extract only for first <number> files', required=False, default=10)
     parser.add_argument('-o', help='output directory of feature vectors', required=False, default='features/feature_vectors')
     return parser.parse_args()
 
