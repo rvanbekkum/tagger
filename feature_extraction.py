@@ -69,5 +69,6 @@ if __name__ == '__main__':
                 break
             image_hash = image_line.split()[2]
             (kp, desc) = get_sift_descriptors(image_hash, args.f)
-            feature_vector = get_feature_vector(kmeans, desc)
-            feature_vector_to_file(args.o, image_hash, feature_vector)
+            if desc.shape[0] != 0:
+                feature_vector = get_feature_vector(kmeans, desc)
+                feature_vector_to_file(args.o, image_hash, feature_vector)
