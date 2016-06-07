@@ -26,5 +26,5 @@ if __name__ == '__main__':
     y = np.matrix(y)
     print "# Training SVM"
     clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
-    print np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy').shape
+    # print np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy').shape
     print clf.predict(np.load('features/feature_vectors/001bcce2f7f5846fbdc36583bedb6.npy')).shape
