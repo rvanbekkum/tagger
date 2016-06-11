@@ -9,6 +9,6 @@ Vagrant.configure(2) do |config|
     v.customize ["modifyvm", :id, "--memory", 4096]
     v.customize ["modifyvm", :id, "--cpus", 2]
   end
-  config.vm.synced_folder ".", "/home/vagrant/tag-prediction"
-  config.vm.provision "shell", path: "bootstrap.sh", privileged: false
+  config.vm.synced_folder ".", "/home/vagrant/tagger"
+  config.vm.provision "shell", path: "provision/bootstrap.sh", privileged: false
 end

@@ -3,8 +3,8 @@ import csv
 import numpy as np
 import re
 
-IMAGE_DATA = 'image_data.tsv'
-OUTPUT = 'features/labels/'
+IMAGE_DATA = 'data/image_data.tsv'
+OUTPUT = 'data/labels/'
 NUM_OF_IMAGES = 100
 
 def tsv_to_list(csvinput):
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     print(len(image_hashes))
     mlb = MultiLabelBinarizer()
     y_binary = mlb.fit_transform(y_labels)
-    np.save('labels', mlb.classes_)
+    np.save(OUTPUT + 'labels', mlb.classes_)
 
     y_labeled = zip(image_hashes, y_binary)
 

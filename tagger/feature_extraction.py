@@ -1,7 +1,7 @@
 import numpy as np
 import argparse
 import os
-from extract_sift import file_to_sift
+from scripts.extract_sift import file_to_sift
 from sklearn.cluster import KMeans
 
 
@@ -24,10 +24,10 @@ def get_sift_descriptors(image_hash, sift_features_dir):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
-    parser.add_argument('-m', help='metadata of the training set', required=False, default='image_data.tsv')
-    parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='features/sift')
+    parser.add_argument('-m', help='metadata of the training set', required=False, default='data/image_data.tsv')
+    parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='data/sift')
     parser.add_argument('-n', help='extract only for first <number> files', required=False, default=10)
-    parser.add_argument('-o', help='output directory of feature vectors', required=False, default='features/feature_vectors')
+    parser.add_argument('-o', help='output directory of feature vectors', required=False, default='data/feature_vectors')
     return parser.parse_args()
 
 if __name__ == '__main__':
