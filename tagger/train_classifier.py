@@ -33,12 +33,15 @@ if __name__ == '__main__':
     X = np.matrix(X)
     y = np.matrix(y)
 
+    print X
+    print y
+
     print "# Training SVM"
     clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
 
     # joblib.dump(clf, args.o)
 
-    sample = '00151757feb88de1777723d170390'
+    sample = '0004bb7bbb2676da9b22642423e90'
     print(sample)
     vector = np.load('data/feature_vectors/' + sample + '.npy')
     vector = np.matrix(vector)
@@ -47,7 +50,7 @@ if __name__ == '__main__':
 
     print "# Generating labels"
 
-    labels = np.load('labels.npy')
+    labels = np.load('data/labels/labels.npy')
     indexes = [i for i, x in enumerate(prediction[0]) if x == 1]
     for i in indexes:
         print(labels[i])
