@@ -30,6 +30,9 @@ def filter_tags(tags):
     # return [tag for tag in tags if not(re.search(regex, tag)) and tag]
 
 def binarize(n=10):
+
+    print('Preprocessing labels...')
+
     sample_size = int(n)
     image_hashes, y_labels = tsv_to_list(sample_size)
     mlb = MultiLabelBinarizer()

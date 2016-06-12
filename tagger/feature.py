@@ -37,7 +37,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
     if sample_size > 0:
         number_of_images = int(sample_size)
 
-    print '# Retrieving SIFT descriptors'
+    print 'Retrieving SIFT descriptors...'
     all_sift_descriptors = []
     with open(dataset) as metadata:
         number_processed = 0
@@ -46,6 +46,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
             if number_processed > number_of_images:
                 break
             image_hash = image_line.split()[2]
+            print(image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             for descriptor in desc:
                 all_sift_descriptors.append(descriptor)
@@ -53,11 +54,11 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
     all_sift_descriptors = np.array(all_sift_descriptors)
     num_clusters = int(np.sqrt(all_sift_descriptors.shape[0]))
 
-    print '# Executing K-Means, no. of clusters: {0}'.format(num_clusters)
+    print 'Cluster visual words with {0} clusters...'.format(num_clusters)
     kmeans = KMeans(n_clusters=num_clusters)
     kmeans.fit(all_sift_descriptors)
 
-    print '# Generating feature vectors'
+    print 'Generating feature vectors...'
     with open(dataset) as metadata:
         number_processed = 0
         for image_line in metadata:

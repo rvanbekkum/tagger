@@ -1,13 +1,12 @@
 from sklearn.externals import joblib
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 import argparse
 import numpy as np
 import os
 import feature
 import label
-
+from preprocess import preprocess
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
@@ -19,46 +18,14 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
+    train(args.n, args.f, args.l, args.o)
 
-    print('\n===== REMOVE OLD FILES =====\n')
+def train(sample_size=10, feature_path='data/feature_vectors', label_path='data/labels', model_path='model/model.pkl'):
 
-    output_dirs = ["./data/feature_vectors/", "./data/labels/", 'model/']
-    for path in output_dirs:
-        filelist = [ path + f for f in os.listdir(path) if f.endswith(".npy") or f.endswith('.pkl') ]
-        for f in filelist:
-            os.remove(f)
-            print('Deleted: ' + f)
-
-    print('\n===== FEATURE EXTRACTION =====\n')
-
-    feature.extract(args.n)
-
-    print('\n===== BINARIZE LABELS =====\n')
-
-    label.binarize(args.n)
-
-    print('\n===== LOADING FEATURE VECTORS AND LABELS =====\n')
-
-    X = []
-    y = []
-    i = 0
-    for filename in os.listdir(args.f):
-        if i == int(args.n):
-            break
-        if os.path.isfile(args.l + '/' + filename):
-            feature_vector = np.load(args.f + '/' + filename)
-            label_vector = np.load(args.l + '/' + filename)
-            X.append(feature_vector.tolist())
-            y.append(label_vector.tolist())
-            i = i + 1
-    X = np.matrix(X)
-    y = np.matrix(y)
-
-    print X
-    print y
+    X, y = preprocess(sample_size)
 
     print('\n===== TRAINING CLASSIFIER =====\n')
-    clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
+    clf = OneVsRestClassifier(SVC(kernel='linear')).fit(X, y)
 
     print('\n===== PERSISTING CLASSIFIER =====\n')
-    joblib.dump(clf, args.o)
+    joblib.dump(clf, model_path)
