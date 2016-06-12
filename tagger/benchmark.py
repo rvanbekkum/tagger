@@ -12,11 +12,11 @@ X, y = preprocess(1000)
 
 print('\n===== PERFORMING BENCHMARK =====\n')
 
-print('Sample size: {0}'.format(X.shape[0]))
+print('Sample size: {0}...'.format(X.shape[0]))
 
-print('Performing k-fold cross-validation with k = 5...')
+print('Performing k-fold cross-validation with k = 10...')
 
-kf = KFold(X.shape[0], n_folds=5)
+kf = KFold(X.shape[0], n_folds=10)
 
 for train, test in kf:
     X_train, X_test, y_train, y_test = X[train], X[test], y[train], y[test]

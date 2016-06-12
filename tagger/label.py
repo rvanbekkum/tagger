@@ -46,5 +46,5 @@ def binarize(n=10):
         if i >= n:
             break
         np.save(OUTPUT + hash, y_vector)
-        print(hash)
+        print(str(i) + ' ' + hash)
         i = i + 1

@@ -46,7 +46,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
             if number_processed > number_of_images:
                 break
             image_hash = image_line.split()[2]
-            print(image_hash)
+            print(str(number_processed) + ' ' + image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             for descriptor in desc:
                 all_sift_descriptors.append(descriptor)
@@ -66,7 +66,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
             if number_processed > number_of_images:
                 break
             image_hash = image_line.split()[2]
-            print(image_hash)
+            print(str(number_processed) + ' ' + image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             if desc.shape[0] != 0:
                 feature_vector = get_feature_vector(kmeans, desc)
