@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 import os
 from scripts.extract_sift import file_to_sift
-from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
 
 
 def get_feature_vector(kmeans, desc):
@@ -55,7 +55,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
     num_clusters = int(np.sqrt(all_sift_descriptors.shape[0]))
 
     print 'Cluster visual words with {0} clusters...'.format(num_clusters)
-    kmeans = KMeans(n_clusters=num_clusters)
+    kmeans = MiniBatchKMeans(n_clusters=num_clusters)
     kmeans.fit(all_sift_descriptors)
 
     print 'Generating feature vectors...'
