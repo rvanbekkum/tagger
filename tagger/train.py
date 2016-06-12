@@ -5,6 +5,8 @@ from sklearn.svm import LinearSVC
 import argparse
 import numpy as np
 import os
+import feature
+import label
 
 
 def parse_arguments():
@@ -17,9 +19,28 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
+
+    print('\n===== REMOVE OLD FILES =====\n')
+
+    output_dirs = ["./data/feature_vectors/", "./data/labels/", 'model/']
+    for path in output_dirs:
+        filelist = [ path + f for f in os.listdir(path) if f.endswith(".npy") or f.endswith('.pkl') ]
+        for f in filelist:
+            os.remove(f)
+            print('Deleted: ' + f)
+
+    print('\n===== FEATURE EXTRACTION =====\n')
+
+    feature.extract(args.n)
+
+    print('\n===== BINARIZE LABELS =====\n')
+
+    label.binarize(args.n)
+
+    print('\n===== LOADING FEATURE VECTORS AND LABELS =====\n')
+
     X = []
     y = []
-    print "# Loading feature vectors and labels"
     i = 0
     for filename in os.listdir(args.f):
         if i == int(args.n):
@@ -36,26 +57,8 @@ if __name__ == '__main__':
     print X
     print y
 
-    print "# Training SVM"
+    print('\n===== TRAINING CLASSIFIER =====\n')
     clf = OneVsRestClassifier(LinearSVC(random_state=0)).fit(X, y)
 
-    # joblib.dump(clf, args.o)
-
-    sample = '0004bb7bbb2676da9b22642423e90'
-    print(sample)
-    vector = np.load('data/feature_vectors/' + sample + '.npy')
-    vector = np.matrix(vector)
-    prediction = clf.predict(vector)
-    # print(prediction)
-
-    print "# Generating labels"
-
-    labels = np.load('data/labels/labels.npy')
-    indexes = [i for i, x in enumerate(prediction[0]) if x == 1]
-    for i in indexes:
-        print(labels[i])
-    #
-    # y_vector = np.load('data/labels/001be3fea343798a8833ae9c4d1247.npy')
-    # indexes = [i for i, x in enumerate(y_vector) if x == 1]
-    # for i in indexes:
-    #     print(labels[i])
+    print('\n===== PERSISTING CLASSIFIER =====\n')
+    joblib.dump(clf, args.o)

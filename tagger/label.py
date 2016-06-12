@@ -5,16 +5,15 @@ import re
 
 IMAGE_DATA = 'data/image_data.tsv'
 OUTPUT = 'data/labels/'
-NUM_OF_IMAGES = 10
 
-def tsv_to_list(csvinput):
+def tsv_to_list(n, csvinput='data/image_data.tsv'):
     image_hashes = []
     labels = []
     with open(csvinput) as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         i = 0
         for row in reader:
-            if i == NUM_OF_IMAGES:
+            if i == n:
                 break
             image_hash = row[2]
             tags = row[10].split(',')
@@ -22,7 +21,7 @@ def tsv_to_list(csvinput):
             if tags_filtered:
                 image_hashes.append(image_hash)
                 labels.append(tags_filtered)
-                i += 1
+                i = i + 1
     return image_hashes, labels
 
 def filter_tags(tags):
@@ -30,8 +29,9 @@ def filter_tags(tags):
     return [tag for tag in tags if re.sub(regex, '', tag)]
     # return [tag for tag in tags if not(re.search(regex, tag)) and tag]
 
-if __name__ == '__main__':
-    image_hashes, y_labels = tsv_to_list(IMAGE_DATA)
+def binarize(n=10):
+    sample_size = int(n)
+    image_hashes, y_labels = tsv_to_list(sample_size)
     mlb = MultiLabelBinarizer()
     y_binary = mlb.fit_transform(y_labels)
     np.save(OUTPUT + 'labels', mlb.classes_)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     i = 0
     for (hash, y_vector) in y_labeled:
-        if i >= NUM_OF_IMAGES:
+        if i >= n:
             break
         np.save(OUTPUT + hash, y_vector)
         print(hash)

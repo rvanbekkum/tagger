@@ -30,23 +30,23 @@ def parse_arguments():
     parser.add_argument('-o', help='output directory of feature vectors', required=False, default='data/feature_vectors')
     return parser.parse_args()
 
-if __name__ == '__main__':
-    args = parse_arguments()
+def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', output='data/feature_vectors'):
+    # args = parse_arguments()
 
     number_of_images = 0
-    if args.n > 0:
-        number_of_images = int(args.n)
+    if sample_size > 0:
+        number_of_images = int(sample_size)
 
     print '# Retrieving SIFT descriptors'
     all_sift_descriptors = []
-    with open(args.m) as metadata:
+    with open(dataset) as metadata:
         number_processed = 0
         for image_line in metadata:
             number_processed += 1
             if number_processed > number_of_images:
                 break
             image_hash = image_line.split()[2]
-            (kp, desc) = get_sift_descriptors(image_hash, args.f)
+            (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             for descriptor in desc:
                 all_sift_descriptors.append(descriptor)
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     kmeans.fit(all_sift_descriptors)
 
     print '# Generating feature vectors'
-    with open(args.m) as metadata:
+    with open(dataset) as metadata:
         number_processed = 0
         for image_line in metadata:
             number_processed += 1
@@ -66,7 +66,7 @@ if __name__ == '__main__':
                 break
             image_hash = image_line.split()[2]
             print(image_hash)
-            (kp, desc) = get_sift_descriptors(image_hash, args.f)
+            (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             if desc.shape[0] != 0:
                 feature_vector = get_feature_vector(kmeans, desc)
-                feature_vector_to_file(args.o, image_hash, feature_vector)
+                feature_vector_to_file(output, image_hash, feature_vector)
