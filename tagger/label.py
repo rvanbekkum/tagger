@@ -3,25 +3,23 @@ import csv
 import numpy as np
 import re
 
-IMAGE_DATA = 'data/image_data.tsv'
+IMAGE_DATA = 'data/training_data.csv'
 OUTPUT = 'data/labels/'
 
-def tsv_to_list(n, csvinput='data/image_data.tsv'):
+def csv_to_list(n, csvinput=IMAGE_DATA):
     image_hashes = []
     labels = []
     with open(csvinput) as csvfile:
-        reader = csv.reader(csvfile, delimiter='\t')
-        i = 0
-        for row in reader:
+        reader = csv.reader(csvfile)
+        for i, row in enumerate(reader):
             if i == n:
                 break
-            image_hash = row[2]
-            tags = row[10].split(',')
+            image_hash = row[0]
+            tags = row[2].split(',')
             tags_filtered = filter_tags(tags)
             if tags_filtered:
                 image_hashes.append(image_hash)
                 labels.append(tags_filtered)
-                i = i + 1
     return image_hashes, labels
 
 def filter_tags(tags):
@@ -34,7 +32,7 @@ def binarize(n=10):
     print('Preprocessing labels...')
 
     sample_size = int(n)
-    image_hashes, y_labels = tsv_to_list(sample_size)
+    image_hashes, y_labels = csv_to_list(sample_size)
     mlb = MultiLabelBinarizer()
     y_binary = mlb.fit_transform(y_labels)
     np.save(OUTPUT + 'labels', mlb.classes_)
@@ -48,3 +46,5 @@ def binarize(n=10):
         np.save(OUTPUT + hash, y_vector)
         print(str(i) + ' ' + hash)
         i = i + 1
+
+binarize()
