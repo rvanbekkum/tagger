@@ -17,17 +17,20 @@ def download_photo(photo_id, user_id):
 
 
 def fetch_sift(photo_id, user_id):
-    filename = OUTPUT + photo_id + '.SIFT'
-    if os.path.isfile(filename):
+    filename = OUTPUT + photo_id
+    if os.path.isfile(filename + '.SIFT'):
         return
     download_photo(photo_id, user_id)
-    extract_sift(filename)
-    os.remove(filename)
+    extract_sift(filename + '.jpg')
+    os.remove(filename + '.jpg')
 
 # Download images and extract SIFT descriptors of the training set
 with open(INPUT_TRAIN) as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
+    num = 1
     for row in reader:
         photo_id = row[0]
         user_id = row[1]
+        print 'Fetching file #{}'.format(num)
         fetch_sift(photo_id, user_id)
+        num += 1
