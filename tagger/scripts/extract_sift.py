@@ -88,37 +88,4 @@ def file_to_sift(filename):
 
             desc.append(dtmp)
 
-    return kp, np.array(desc, dtype=np.float32)
-
-def file_to_sift(filename, dir, image_hash):
-    kp = []
-    desc = []
-    with open(dir + '/' + filename) as f:
-        for line in f:
-            feat_str = line.strip()
-            cols = feat_str.split(',')
-
-            im_name = cols[0]
-            if im_name != image_hash:
-                continue
-
-            kp_size = int(cols[3])
-            for i in range(kp_size):
-                base_idx = 4 + i*7
-                kp_desc = map(float, cols[base_idx:base_idx+6])
-                x = int(kp_desc[0])
-                y = int(kp_desc[1])
-                kp_size = kp_desc[2]
-                kp_response = kp_desc[3]
-                kp_angle = int(kp_desc[4])
-                kp_octave = int(kp_desc[5])
-
-                ktmp = cv2.KeyPoint(x=x, y=y, _size=kp_size, _angle=kp_angle, _response=kp_response, _octave=kp_octave)
-                kp.append(ktmp)
-
-                dtmp = cols[base_idx+6]
-                dtmp = map(float, dtmp.split())
-
-                desc.append(dtmp)
-
     return kp, np.array(desc)

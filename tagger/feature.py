@@ -16,21 +16,18 @@ def feature_vector_to_file(directory, image_hash, feature_vector):
         os.makedirs(directory)
     np.save(directory + '/' + image_hash, feature_vector)
 
-def get_sift_descriptors(image_hash, sift_features_dir):
-    for filename in os.listdir(sift_features_dir):
-        name, file_extension = os.path.splitext(filename)
-        if file_extension == '.sift' and image_hash.startswith(name):
-            return file_to_sift(filename, sift_features_dir, image_hash)
+def get_sift_descriptors(image_hash, sift_path):
+    return file_to_sift(sift_path + image_hash + '.sift')
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
     parser.add_argument('-m', help='metadata of the training set', required=False, default='data/image_data.tsv')
-    parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='data/sift')
+    parser.add_argument('-f', help='directory to the SIFT descriptor files', required=False, default='data/sift/')
     parser.add_argument('-n', help='extract only for first <number> files', required=False, default=10)
     parser.add_argument('-o', help='output directory of feature vectors', required=False, default='data/feature_vectors')
     return parser.parse_args()
 
-def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', output='data/feature_vectors'):
+def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/', output='data/feature_vectors'):
     # args = parse_arguments()
 
     number_of_images = 0
@@ -45,7 +42,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
             number_processed += 1
             if number_processed > number_of_images:
                 break
-            image_hash = image_line.split()[2]
+            image_hash = image_line.split(',')[0]
             print(str(number_processed) + ' ' + image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             for descriptor in desc:
@@ -65,7 +62,7 @@ def extract(sample_size, dataset='data/image_data.tsv', sift_path='data/sift', o
             number_processed += 1
             if number_processed > number_of_images:
                 break
-            image_hash = image_line.split()[2]
+            image_hash = image_line.split(',')[0]
             print(str(number_processed) + ' ' + image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
             if desc.shape[0] != 0:
