@@ -12,7 +12,7 @@ def download_photo(photo_id, user_id):
         html = urllib2.urlopen(url).read()
     except urllib2.HTTPError, err:
         return
-    img_urls = re.findall(r'(?:https?://)?farm[^":]+_o\.(?:jpg|gif|png)', html)
+    img_urls = re.findall(r'(?:https?://)?farm[^":]+_z\.(?:jpg|gif|png)', html)
     if len(img_urls) > 0:
         img_url = img_urls[0].replace('\/', '/')
         filename = OUTPUT + photo_id + '.jpg'
