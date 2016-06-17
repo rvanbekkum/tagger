@@ -40,7 +40,8 @@ def get_sift(img, show=1, maxfeatures=500, xgrid=1, ygrid=1):
 
 def extract_sift(im_name):
     im = cv2.imread(im_name)
-    out_name = im_name.split('.')[0]
+    full_im_path = os.path.abspath(im_name)
+    out_name = full_im_path.split('.')[0]
     out = out_name + '.SIFT'
     feat_file = open(out, 'w')
     kp, desc = get_sift(im, show=0, maxfeatures=500)  # set to whatever you want to have as max SIFt points
