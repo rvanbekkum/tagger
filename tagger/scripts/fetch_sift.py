@@ -11,6 +11,7 @@ def download_photo(photo_id, user_id):
     try:
         html = urllib2.urlopen(url).read()
     except urllib2.HTTPError, err:
+        print '\tHTTP Error while trying to download image'
         return
     img_urls = re.findall(r'(?:https?://)?farm[^":]+_z\.(?:jpg|gif|png)', html)
     if len(img_urls) > 0:
@@ -20,10 +21,15 @@ def download_photo(photo_id, user_id):
         with open(filename, "wb") as fp:
             fp.write(urllib2.urlopen('https://' + img_url).read())
 
+        print '\tDownload successful'
+    else:
+        print '\tCould not retrieve image URL'
+
 
 def fetch_sift(photo_id, user_id):
     filename = OUTPUT + photo_id
     if os.path.isfile(filename + '.SIFT'):
+        print '\t SIFT already extracted'
         return
     download_photo(photo_id, user_id)
     if os.path.isfile(filename + '.jpg'):
@@ -37,7 +43,7 @@ with open(INPUT_TRAIN) as csvfile:
     for row in reader:
         photo_id = row[0]
         user_id = row[1]
-        print 'Fetching file #{}'.format(num)
+        print 'Fetching file #{} with ID {}'.format(num, photo_id)
         fetch_sift(photo_id, user_id)
         num += 1
         if num == 5001:
