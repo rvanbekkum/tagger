@@ -46,5 +46,3 @@ def binarize(n=10):
         np.save(OUTPUT + hash, y_vector)
         print(str(i) + ' ' + hash)
         i = i + 1
-
-binarize()
