@@ -16,10 +16,6 @@ def parse_arguments():
     parser.add_argument('-o', help='filename of trained classifier', required=False, default='model/model.pkl')
     return parser.parse_args()
 
-if __name__ == '__main__':
-    args = parse_arguments()
-    train(args.n, args.f, args.l, args.o)
-
 def train(sample_size=10, feature_path='data/feature_vectors', label_path='data/labels', model_path='model/model.pkl'):
 
     X, y = preprocess(sample_size)
@@ -29,3 +25,7 @@ def train(sample_size=10, feature_path='data/feature_vectors', label_path='data/
 
     print('\n===== PERSISTING CLASSIFIER =====\n')
     joblib.dump(clf, model_path)
+
+if __name__ == '__main__':
+    args = parse_arguments()
+    train(args.n, args.f, args.l, args.o)
