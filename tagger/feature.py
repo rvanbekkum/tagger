@@ -52,7 +52,7 @@ def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/
                 all_sift_descriptors.append(descriptor)
 
     all_sift_descriptors = np.array(all_sift_descriptors)
-    num_clusters = int(np.sqrt(all_sift_descriptors.shape[0]))
+    num_clusters = int(np.sqrt(all_sift_descriptors.shape[0] / 2.0))
 
     print 'Cluster visual words with {0} clusters...'.format(num_clusters)
     kmeans = MiniBatchKMeans(n_clusters=num_clusters)

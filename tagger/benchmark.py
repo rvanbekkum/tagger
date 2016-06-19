@@ -16,15 +16,20 @@ def is_similar(predictions, truth):
     else:
         return True
 
-X, y = preprocess(10000)
+def accuracy_at_k(predictions, truth, k=99999):
+    return any(i in truth for i in predictions[:k])
+
+X, y = preprocess(100)
 
 print('\n===== PERFORMING BENCHMARK =====\n')
 
 print('Sample size: {0}...'.format(X.shape[0]))
 
-print('Performing k-fold cross-validation with k = 10...')
+K_FOLDS = 10
 
-kf = KFold(X.shape[0], n_folds=10)
+print('Performing k-fold cross-validation with k = ' + str(K_FOLDS) + '...')
+
+kf = KFold(X.shape[0], n_folds=K_FOLDS)
 
 labels = np.load('data/labels/labels.npy')
 
@@ -44,7 +49,7 @@ for train, test in kf:
         pred_tags = [labels[i] for i, x in enumerate(p) if x == 1]
         true_tags = [labels[i] for i, x in enumerate(t) if x == 1]
         # print(pred_tags, true_tags)
-        if is_similar(pred_tags, true_tags):
+        if accuracy_at_k(pred_tags, true_tags):
             num_of_correct_predictions += 1
 
     print('Accuracy: ' + str(num_of_correct_predictions / len(prediction)))
