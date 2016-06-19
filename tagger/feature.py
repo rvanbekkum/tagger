@@ -17,7 +17,10 @@ def feature_vector_to_file(directory, image_hash, feature_vector):
     np.save(directory + '/' + image_hash, feature_vector)
 
 def get_sift_descriptors(image_hash, sift_path):
-    return file_to_sift(sift_path + image_hash + '.sift')
+    filename = sift_path + image_hash + '.SIFT'
+    if os.path.isfile(filename):
+        return file_to_sift(filename)
+    return [], []
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Extracts bag of words feature vectors from image training data')
@@ -65,6 +68,6 @@ def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/
             image_hash = image_line.split(',')[0]
             print(str(number_processed) + ' ' + image_hash)
             (kp, desc) = get_sift_descriptors(image_hash, sift_path)
-            if desc.shape[0] != 0:
+            if len(desc) > 0 and desc.shape[0] != 0:
                 feature_vector = get_feature_vector(kmeans, desc)
                 feature_vector_to_file(output, image_hash, feature_vector)
