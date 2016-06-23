@@ -3,6 +3,8 @@ import argparse
 import os
 from scripts.extract_sift import file_to_sift
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.externals import joblib
+import sys
 
 
 def get_feature_vector(kmeans, desc):
@@ -31,10 +33,8 @@ def parse_arguments():
     return parser.parse_args()
 
 def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/', output='data/feature_vectors'):
-    # args = parse_arguments()
-
     number_of_images = 0
-    if sample_size > 0:
+    if int(sample_size) > 0:
         number_of_images = int(sample_size)
 
     print 'Retrieving SIFT descriptors...'
@@ -58,6 +58,8 @@ def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/
     kmeans = MiniBatchKMeans(n_clusters=num_clusters)
     kmeans.fit(all_sift_descriptors)
 
+    joblib.dump(kmeans, 'codebook/codebook.pkl')
+
     print 'Generating feature vectors...'
     with open(dataset) as metadata:
         number_processed = 0
@@ -71,3 +73,7 @@ def extract(sample_size, dataset='data/training_data.csv', sift_path='data/sift/
             if len(desc) > 0 and desc.shape[0] != 0:
                 feature_vector = get_feature_vector(kmeans, desc)
                 feature_vector_to_file(output, image_hash, feature_vector)
+
+if __name__ == '__main__':
+    # args = parse_arguments()
+    extract(2000, 'data/test_data.csv', 'data/sift_test/', 'data/feature_vectors_test')

@@ -2,3 +2,6 @@ image_data.tsv
 tag-train
 *.zip
 *.tar.gz
+*.SIFT
+*.pkl
+*.npy
