@@ -4,7 +4,7 @@ import feature
 import label
 
 
-def preprocess(sample_size=10, feature_path='data/feature_vectors', label_path='data/labels', model_path='model/model.pkl'):
+def preprocess(sample_size=10, feature_path='data/feature_vectors', label_path='data/labels'):
 
     print('\n===== REMOVE OLD FILES =====\n')
 
